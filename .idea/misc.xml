@@ -3,8 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/yashw/AndroidStudioProjects/HereMaps/app/src/main/res/layout/activity_maps.xml" value="0.31875" />
+        <entry key="..\:/Users/yashw/AndroidStudioProjects/HereMaps/app/src/main/res/drawable/delivery_stop_background.xml" value="0.1965" />
+        <entry key="..\:/Users/yashw/AndroidStudioProjects/HereMaps/app/src/main/res/drawable/ic_arrow.xml" value="0.1965" />
+        <entry key="..\:/Users/yashw/AndroidStudioProjects/HereMaps/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.1965" />
+        <entry key="..\:/Users/yashw/AndroidStudioProjects/HereMaps/app/src/main/res/drawable/pickup_stop_background.xml" value="0.1965" />
+        <entry key="..\:/Users/yashw/AndroidStudioProjects/HereMaps/app/src/main/res/layout/activity_maps.xml" value="0.264" />
         <entry key="..\:/Users/yashw/AndroidStudioProjects/HereMaps/app/src/main/res/layout/activity_splash.xml" value="0.31875" />
+        <entry key="..\:/Users/yashw/AndroidStudioProjects/HereMaps/app/src/main/res/menu/maps_menu.xml" value="0.31875" />
       </map>
     </option>
   </component>

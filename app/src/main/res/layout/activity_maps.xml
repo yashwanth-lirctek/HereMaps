@@ -17,7 +17,9 @@
             android:id="@+id/mToolBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
             app:navigationIconTint="@color/white"
+            app:menu="@menu/maps_menu"
             app:elevation="10dp">
 
             <RelativeLayout
@@ -26,15 +28,34 @@
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textAllCaps="true"
-                    android:layout_centerInParent="true"
-                    android:layout_alignParentStart="true"
-                    android:id="@+id/mToolbarText"
-                    android:text="Here Map's Testing"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:padding="5dp"
                     android:textStyle="bold"
-                    android:textSize="18sp"/>
+                    android:id="@+id/mPickupLocation"
+                    android:layout_alignParentStart="true"
+                    android:textAllCaps="true"/>
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/mArrowMark"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_toEndOf="@id/mPickupLocation"
+                    android:src="@drawable/ic_arrow"
+                    app:tint="@color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:padding="5dp"
+                    android:textStyle="bold"
+                    android:layout_toEndOf="@id/mArrowMark"
+                    android:id="@+id/mDeliveryLocation"
+                    android:textAllCaps="true"/>
 
             </RelativeLayout>
 

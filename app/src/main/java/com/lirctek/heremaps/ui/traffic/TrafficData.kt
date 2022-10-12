@@ -19,10 +19,6 @@ class TrafficData(val context: Context, val mapView: MapView) {
     private val mapPolylines: MutableList<MapPolyline> = ArrayList()
 
     init {
-        val camera = mapView.camera
-        val distanceInMeters = (1000 * 10).toDouble()
-        val mapMeasureZoom = MapMeasure(MapMeasure.Kind.DISTANCE, distanceInMeters)
-        camera.lookAt(GeoCoordinates(52.520798, 13.409408), mapMeasureZoom)
         trafficEngine = try {
             TrafficEngine()
         } catch (e: InstantiationErrorException) {

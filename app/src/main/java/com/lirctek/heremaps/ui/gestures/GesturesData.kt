@@ -1,23 +1,19 @@
 package com.lirctek.heremaps.ui.gestures
 
-import android.content.Context
 import android.util.Log
-import com.here.sdk.core.GeoCoordinates
+import com.here.sdk.core.Point2D
 import com.here.sdk.gestures.*
-import com.here.sdk.mapview.MapMeasure
 import com.here.sdk.mapview.MapView
+import com.here.sdk.mapview.MapViewBase.PickMapItemsCallback
 
-class GesturesData(val context: Context, val mapView: MapView) {
+
+class GesturesData(val mapView: MapView) {
 
     private val TAG: String = GesturesData::class.java.simpleName
 
     private var gestureMapAnimator: GestureMapAnimator? = null
 
     init {
-        val camera = mapView.camera
-        val distanceInMeters = (1000 * 10).toDouble()
-        val mapMeasureZoom = MapMeasure(MapMeasure.Kind.DISTANCE, distanceInMeters)
-        camera.lookAt(GeoCoordinates(52.520798, 13.409408), mapMeasureZoom)
         gestureMapAnimator = GestureMapAnimator(mapView.camera)
         setTapGestureHandler(mapView)
         setDoubleTapGestureHandler(mapView)
@@ -34,7 +30,28 @@ class GesturesData(val context: Context, val mapView: MapView) {
         mapView.gestures.tapListener = TapListener { touchPoint ->
             val geoCoordinates = mapView.viewToGeoCoordinates(touchPoint)
             Log.d(TAG, "Tap at: $geoCoordinates")
+            pickMapMarker(touchPoint)
         }
+    }
+
+    private fun pickMapMarker(touchPoint: Point2D) {
+        val radiusInPixel = 2f
+        mapView.pickMapItems(touchPoint, radiusInPixel.toDouble(),
+            PickMapItemsCallback { pickMapItemsResult ->
+                if (pickMapItemsResult == null) {
+                    // An error occurred while performing the pick operation.
+                    return@PickMapItemsCallback
+                }
+                val mapMarkerList = pickMapItemsResult.markers
+                if (mapMarkerList.size == 0) {
+                    return@PickMapItemsCallback
+                }
+                val topmostMapMarker = mapMarkerList[0]
+                Log.d(TAG,
+                    "Map marker picked: Location: " +
+                            topmostMapMarker.coordinates.latitude + ", " +
+                            topmostMapMarker.coordinates.longitude)
+            })
     }
 
     private fun setDoubleTapGestureHandler(mapView: MapView) {
