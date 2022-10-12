@@ -7,6 +7,7 @@ import android.os.Handler
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import com.here.sdk.core.GeoCoordinates
 import com.here.sdk.mapview.MapMeasure
@@ -22,12 +23,14 @@ import com.lirctek.heremaps.ui.traffic.TrafficData
 class MapsActivity : AppCompatActivity() {
 
     lateinit var mViewBinding: ActivityMapsBinding
+    lateinit var mViewModel: MapsViewModel
     lateinit var tripLoad: TripLoad
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         mViewBinding = ActivityMapsBinding.inflate(layoutInflater)
+        mViewModel = ViewModelProvider(this)[MapsViewModel::class.java]
         setContentView(mViewBinding.root)
         mViewBinding.mMapView.onCreate(savedInstanceState)
 
