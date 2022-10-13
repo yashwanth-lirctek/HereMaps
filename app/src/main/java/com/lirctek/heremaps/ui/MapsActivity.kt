@@ -5,26 +5,39 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import com.here.sdk.core.GeoCoordinates
+import com.here.sdk.core.LanguageCode
+import com.here.sdk.core.Point2D
+import com.here.sdk.mapview.MapMarker
 import com.here.sdk.mapview.MapMeasure
 import com.here.sdk.mapview.MapScheme
+import com.here.sdk.search.Place
+import com.here.sdk.search.SearchCallback
+import com.here.sdk.search.SearchError
+import com.here.sdk.search.SearchOptions
 import com.lirctek.heremaps.HereMaps
 import com.lirctek.heremaps.databinding.ActivityMapsBinding
 import com.lirctek.heremaps.models.TripLoad
+import com.lirctek.heremaps.ui.`interface`.RouteInterface
+import com.lirctek.heremaps.ui.`interface`.ToolTipInterface
 import com.lirctek.heremaps.ui.gestures.GesturesData
 import com.lirctek.heremaps.ui.routing.RoutingData
 import com.lirctek.heremaps.ui.traffic.TrafficData
+import com.tomergoldst.tooltips.ToolTipsManager
 
 
-class MapsActivity : AppCompatActivity() {
+class MapsActivity : AppCompatActivity(), RouteInterface, ToolTipsManager.TipListener, ToolTipInterface {
 
     lateinit var mViewBinding: ActivityMapsBinding
     lateinit var mViewModel: MapsViewModel
     lateinit var tripLoad: TripLoad
+
+    private var mToolTipsManager: ToolTipsManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +46,8 @@ class MapsActivity : AppCompatActivity() {
         mViewModel = ViewModelProvider(this)[MapsViewModel::class.java]
         setContentView(mViewBinding.root)
         mViewBinding.mMapView.onCreate(savedInstanceState)
+
+        mToolTipsManager = ToolTipsManager(this)
 
         loadSampleData()
         initToolBar()
@@ -300,8 +315,8 @@ class MapsActivity : AppCompatActivity() {
             if (mapError == null) {
                 loadCurrentPosition()
                 TrafficData(this, mViewBinding.mMapView)
-                RoutingData(this, mViewBinding.mMapView, tripLoad.StopDetails)
-                GesturesData(mViewBinding.mMapView)
+                RoutingData(this, mViewBinding.mMapView, tripLoad.StopDetails, this)
+                GesturesData(this, mViewBinding.mMapView)
             } else {
                 Log.d("loadMapScene()", "Loading map failed: mapError: " + mapError.name)
             }
@@ -351,4 +366,17 @@ class MapsActivity : AppCompatActivity() {
         ).show()
         Handler().postDelayed({ twice = false }, 3000)
     }
+
+    override fun onRouteCalculated() {
+    }
+
+    override fun onRouteNotCalculated(message: String) {
+    }
+
+    override fun onTipDismissed(view: View?, anchorViewId: Int, byUser: Boolean) {
+    }
+
+    override fun showToolTip(topmostMapMarker: MapMarker, touchPoint: Point2D) {
+    }
+
 }

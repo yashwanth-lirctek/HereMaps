@@ -1,14 +1,7 @@
 package com.lirctek.heremaps.ui.routing
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.util.Log
-import androidx.core.content.ContextCompat
-import com.google.gson.Gson
 import com.here.sdk.animation.EasingFunction
 import com.here.sdk.core.*
 import com.here.sdk.core.errors.InstantiationErrorException
@@ -17,9 +10,10 @@ import com.here.sdk.routing.*
 import com.here.time.Duration
 import com.lirctek.heremaps.R
 import com.lirctek.heremaps.models.StopDetail
+import com.lirctek.heremaps.ui.`interface`.RouteInterface
 
 
-class RoutingData(val context: Context, val mapView: MapView, val stopDetailsList: List<StopDetail>) {
+class RoutingData(val context: Context, val mapView: MapView, val stopDetailsList: List<StopDetail>, val routeInterface: RouteInterface) {
 
     lateinit var routingEngine: RoutingEngine
     private val TAG: String = RoutingData::class.java.getName()
@@ -42,6 +36,7 @@ class RoutingData(val context: Context, val mapView: MapView, val stopDetailsLis
         waypoints.add(Waypoint(createGeoCoOrdinator(47.307323,  -122.228455)))
         for (i in stopDetailsList.indices){
             waypoints.add(Waypoint(createGeoCoOrdinator(stopDetailsList[i].Latitude!!.toDouble(), stopDetailsList[i].Longitude!!.toDouble())))
+
         }
 
         routingEngine.calculateRoute(
@@ -49,11 +44,12 @@ class RoutingData(val context: Context, val mapView: MapView, val stopDetailsLis
             CarOptions()
         ) { routingError, routes ->
             if (routingError == null) {
+                routeInterface.onRouteCalculated()
                 val route = routes!![0]
                 showRouteOnMap(route)
                 animateToRoute(route)
             } else {
-//                showDialog("Error while calculating a route:", routingError.toString())
+                routeInterface.onRouteNotCalculated("Error while calculating a route : $routingError")
             }
         }
     }
@@ -100,12 +96,12 @@ class RoutingData(val context: Context, val mapView: MapView, val stopDetailsLis
         mapPolylines.add(routeMapPolyline)
         for (i in 1 until route.sections.size) {
             val startPoint = route.sections[i].departurePlace.mapMatchedCoordinates
-            addCircleMapMarker(startPoint, R.drawable.p_letter)
+            addCircleMapMarker(startPoint, R.drawable.p_letter, stopDetailsList[i])
         }
 
 
         val destination = route.sections[route.sections.size - 1].arrivalPlace.mapMatchedCoordinates
-        addCircleMapMarker(destination, R.drawable.d_letter)
+        addCircleMapMarker(destination, R.drawable.d_letter, stopDetailsList[stopDetailsList.size - 1])
 
         // Log maneuver instructions per route section.
         val sections = route.sections
@@ -114,10 +110,19 @@ class RoutingData(val context: Context, val mapView: MapView, val stopDetailsLis
         }
     }
 
-    private fun addCircleMapMarker(geoCoordinates: GeoCoordinates, resourceId: Int) {
+    private fun addCircleMapMarker(
+        geoCoordinates: GeoCoordinates,
+        resourceId: Int,
+        stopDetail: StopDetail
+    ) {
+        val location = stopDetail.City+ ", "+stopDetail.State
+        val metadata = Metadata()
+        metadata.setString("STOP_NUMBER_"+stopDetail.StopNumber, location)
+
         val mapImage = MapImageFactory.fromResource(context.resources, resourceId)
         val anchor2D = Anchor2D(0.5, 1.0)
         val mapMarker = MapMarker(geoCoordinates, mapImage, anchor2D)
+        mapMarker.metadata = metadata
         mapView.mapScene.addMapMarker(mapMarker)
         mapMarkerList.add(mapMarker)
     }

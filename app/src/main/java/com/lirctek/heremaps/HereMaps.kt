@@ -30,8 +30,8 @@ class HereMaps: Application() {
     private fun loadHereMapsSDK(){
 
         // Set your credentials for the HERE SDK.
-        val accessKeyID = "tHgj5SdX11uviUzJeMgmTQ"
-        val accessKeySecret = "iPB8-gZKrILbFxudD0VZHsA8TRmAtv41bVsr9sHHvsWbn0d7dKnv8gPBiRrEQ7GfYitZbIR8JPecLRxkgUGgOQ"
+        val accessKeyID = "-Cqnp6lYFK8Ore7Z351C9w"
+        val accessKeySecret = "vbQd77iqDhdKCA-u8YvLtpOBbheS9HwfGPrMZAgungPCLSakS2s3RgjEdNg1fxbOB8_iGByrl8w_0oFGVsQ_Rw"
         val options = SDKOptions(accessKeyID, accessKeySecret)
         try {
             val context: Context = this

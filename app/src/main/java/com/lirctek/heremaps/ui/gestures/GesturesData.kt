@@ -1,13 +1,17 @@
 package com.lirctek.heremaps.ui.gestures
 
 import android.util.Log
+import com.google.gson.Gson
+import com.here.sdk.core.GeoCoordinates
 import com.here.sdk.core.Point2D
 import com.here.sdk.gestures.*
 import com.here.sdk.mapview.MapView
 import com.here.sdk.mapview.MapViewBase.PickMapItemsCallback
+import com.lirctek.heremaps.ui.*
+import com.lirctek.heremaps.ui.`interface`.ToolTipInterface
 
 
-class GesturesData(val mapView: MapView) {
+class GesturesData(val listener: ToolTipInterface, val mapView: MapView) {
 
     private val TAG: String = GesturesData::class.java.simpleName
 
@@ -49,8 +53,9 @@ class GesturesData(val mapView: MapView) {
                 val topmostMapMarker = mapMarkerList[0]
                 Log.d(TAG,
                     "Map marker picked: Location: " +
-                            topmostMapMarker.coordinates.latitude + ", " +
+                            Gson().toJson(topmostMapMarker.metadata) + ", " +
                             topmostMapMarker.coordinates.longitude)
+                listener.showToolTip(topmostMapMarker, touchPoint)
             })
     }
 
